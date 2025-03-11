@@ -1,0 +1,35 @@
+# created by virtualenv automatically
+# Операционная система
+*.DS_Store
+*.log
+*.pot
+*.pyc
+*.swp
+*.swo
+*.swn
+*.swo
+*.swn
+*.swo
+*.swn
+Thumbs.db
+
+# Лог-файлы и временные файлы IDE
+logs/
+*.sqlite3
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Виртуальное окружение
+venv/
+env/
+*.env
+
+# Файлы и папки Django
+staticfiles/
+media/
+db.sqlite3
+
+# Пакеты
+node_modules/
