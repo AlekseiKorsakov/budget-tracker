@@ -1,0 +1,21 @@
+{% extends 'expenses/base.html' %}
+{% load bootstrap5 %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+    <div class="bg-light p-5 rounded">
+        <h1 class="display-3 text-secondary">BUDGET TRUCKER</h1>
+
+        <p class="lead text-secondary">
+            Контролируй свои финансы с помощью BUDGET TRUCKER
+        </p>
+        {% if user.is_authenticated %}
+          <a href="{% url 'home' %}" class="btn btn-outline-secondary">Начать</a>
+        {% else %}
+          <a href="{% url 'account_login' %}" class="btn btn-outline-secondary">Войти</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

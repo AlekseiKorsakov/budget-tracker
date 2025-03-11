@@ -1,0 +1,23 @@
+{% extends 'expenses/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}New category{% endblock %}
+{% block content %}
+
+<div class="container-sm mt-5">
+<h3 class="text-secondary mb-4">Создай свою категорию</h3>
+    {% if messages %}
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+    {% endif %}
+
+<form action="{% url 'new_category' %}" method="post">
+    {% csrf_token %}
+    {% bootstrap_form form show_label=False %}
+    <div>
+      <button class="btn btn btn-outline-secondary" name="submit">Создать</button>
+    </div>
+</form>
+</div>
+{% endblock content %}

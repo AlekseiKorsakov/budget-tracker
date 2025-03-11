@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load bootstrap5 %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white" href="{% url 'home' %}">HOME</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-secondary hover-white" aria-current="page" href="{% url 'categories' %}">Категории</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          <li class="nav-item me-3 mt-2">
+            <span class="navbar-text text-white">Привет, {{ user.username }} </span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary hover-white" aria-current="page" href="{% url 'account_logout' %}">Выйти</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link text-secondary" href="{% url 'account_signup' %}">Зарегистрироваться</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary" href="{% url 'account_login' %}">Войти</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<style>
+  .hover-white:hover {
+    color: white !important; /* Меняем цвет текста на белый при наведении */
+  }
+</style>
+
+    {% block content %}
+    {% endblock content %}
+
+</body>
+</html>

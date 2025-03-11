@@ -1,0 +1,19 @@
+{% extends 'expenses/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Expense{% endblock %}
+{% block content %}
+
+<div class="container-sm mt-5">
+  <h3 class="mb-4">Доход</h3>
+</a>
+<div class="text-secondary" style="border: 1px solid #6c757d; color: #6c757d; border-radius: 0.5rem;">
+<p class="mt-3 ms-3">Описание:</p>
+<p class="ms-3">{{ income.description }}</p>
+<p class="ms-3">Сумма: {{ income.amount }}грн</p>
+</div>
+  <a href="{% url 'edit_income' income.id %}" class="btn btn-outline-secondary mt-3">Редактировать</a>
+  <a href="{% url 'delete_income' income.id %}" class="btn btn-outline-secondary mt-3 ms-3">Удалить</a>
+</div>
+
+{% endblock content %}

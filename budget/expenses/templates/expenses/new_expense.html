@@ -1,0 +1,30 @@
+{% extends 'expenses/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}New expense{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="container-sm mt-5">
+<form action="{% url 'new_expense' category.id %}" method="POST">
+    <div class="row g-3 justify-content-center">
+      <div class="col-auto">
+        <label for="start" class="col-form-label text-secondary">Дата:</label>
+      </div>
+      <div class="col-auto">
+        <input type="date" id="start" name="date" min="2023-01-01" value="{{ date }}" class="form-control text-secondary border-secondary">
+      </div>
+    <div>
+      <h3 class="text-secondary mb-4">{{ category }}</h3>
+    </div>
+      {% csrf_token %}
+      {% bootstrap_form form show_label=False %}
+    <div>
+      <button class="btn btn btn-outline-secondary" name="submit">Добавить</button>
+    </div>
+</form>
+</div>
+{% endblock content %}

@@ -1,0 +1,47 @@
+{% extends 'expenses/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Caregories{% endblock %}
+{% block content %}
+
+<div class="container-sm mt-5">
+<h3 class="text-secondary mb-4">Категории</h3>
+
+<style>
+  .category-link {
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .category-link:hover {
+    background-color: #6c757d; /* Цвет фона при наведении */
+    color: #fff !important; /* Цвет текста при наведении */
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    {% if user_categories %}
+      {% for category in user_categories %}
+        <div class="col-md-4 mb-3">
+          <a href="{% url 'category' category.id %}" class="text-decoration-none d-block category-link" style="border: 1px solid #6c757d; color: #6c757d; border-radius: 0.5rem; min-height: 60px;">
+            <div class="d-flex align-items-center h-100 p-3">  <!-- Убрали list-group-item и добавили padding -->
+              <ul class="list-unstyled mb-0">
+                <li>
+                  {{ category.name }}
+                </li>
+              </ul>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-12">
+        <div class="alert alert-warning">Упс, просто нажми "Добавить"</div>
+      </div>
+    {% endif %}
+  </div>
+  <div class="mt-3">
+    <a href="{% url 'new_category' %}" class="btn btn-outline-secondary">Добавить</a>
+  </div>
+</div>
+</div>
+{% endblock content %}

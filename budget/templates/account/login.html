@@ -1,0 +1,20 @@
+{% extends 'expenses/base.html' %}
+{% load bootstrap5 %}
+{% load socialaccount %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: rgba(0, 0, 0, 0.05);">
+    <div class="card" style="width: 100%; max-width: 400px; padding: 40px; border-radius: 1.5rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+        <h2 class="text-center text-secondary mb-3">Войти</h2>
+        <form method="post" action="{% url 'account_login' %}" class="form">
+            {% csrf_token %}
+            {% bootstrap_form form show_label=False %}
+            <p class="text-secondary">Запомнить меня</p>
+            <button type="submit" class="btn btn-outline-secondary w-100">Войти</button>
+        </form>
+        <hr>
+        <h5 class="text-center text-secondary">Или</h5>
+        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-secondary w-100">Войти с помощью Google</a>
+    </div>
+</div>
+{% endblock %}

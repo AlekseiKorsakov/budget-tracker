@@ -1,0 +1,105 @@
+{% extends 'expenses/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+
+<div class="container-sm mt-5">
+  <!-- Форма выбора даты -->
+  <form action="{% url 'home' %}" method="GET" class="mb-4">
+    <div class="row g-3 justify-content-center">
+      <div class="col-auto">
+        <label for="start" class="col-form-label text-secondary">Дата:</label>
+      </div>
+      <div class="col-auto">
+        <input type="month" id="start" name="date" min="2018-03" value="{{ date }}" class="form-control text-secondary border-secondary">
+      </div>
+      <div class="col-auto">
+        <button type="submit" class="btn btn-outline-secondary">Выбрать</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Блоки с доходом, расходами и балансом -->
+  <div class="row mb-4">
+    <div class="col text-center">
+      <h5 class="text-secondary">Доход</h5>
+      <h5 class="text-secondary">{{ total_income }}грн</h5>
+    </div>
+    <div class="col text-center">
+      <h5 class="text-secondary">Расходы</h5>
+      <h5 class="text-secondary">{{ total_expenses }}грн</h5>
+    </div>
+    <div class="col text-center">
+      <h5 class="text-secondary">Баланс</h5>
+      <h5 class="text-secondary">{{ balance }}грн</h5>
+    </div>
+  </div>
+
+  <!-- Кнопка "Добавить" -->
+  <div class="mb-4">
+    <div class="dropdown">
+      <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Добавить
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-item" href="{% url 'select_category' %}">Расход</a></li>
+        <li><a class="dropdown-item" href="{% url 'new_income' %}">Доход</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Список расходов -->
+  <div class="list-group">
+    {% if expenses %}
+      {% for date, items in full_data.items %}
+        <div class="list-group-item mb-3" style="border: 1px solid #6c757d; color: #6c757d; border-radius: 0.5rem;">
+          <h5 class="mb-2">{{ date|date:"j E" }}</h5>  <!-- Дата -->
+          <ul class="list-unstyled">  <!-- Убираем точки у списка -->
+            {% for item in items %}
+              {% if item.type == 'expense' %}
+                <li class="mb-2">
+                  <a href="{% url 'expense' item.data.id %}" class="text-decoration-none text-secondary"
+                     style="transition: 0.3s; font-size: 1rem;"
+                     onmouseover="this.style.fontSize='1.1rem'"
+                     onmouseout="this.style.fontSize='1rem'">
+                    {{ item.data.category }}: {{ item.data.amount }}грн
+                  </a>
+                </li>
+              {% else %}
+                <li class="mb-2">
+                  <a href="{% url 'income' item.data.id %}" class="text-decoration-none text-secondary"
+                     style="transition: 0.3s; font-size: 1rem;"
+                     onmouseover="this.style.fontSize='1.1rem'"
+                     onmouseout="this.style.fontSize='1rem'">
+                    Доход: {{ item.data.amount }}грн
+                  </a>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-warning">Пока нет расходов</div>
+    {% endif %}
+  </div>
+
+{% if expenses %}
+  <!-- Кнопка "Добавить" -->
+  <div class="mb-4">
+    <div class="dropdown">
+      <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton_2" data-bs-toggle="dropdown" aria-expanded="false">
+        Добавить
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-item" href="{% url 'select_category' %}">Расход</a></li>
+        <li><a class="dropdown-item" href="{% url 'new_income' %}">Доход</a></li>
+      </ul>
+    </div>
+  </div>
+{% endif %}
+</div>
+{% endblock content %}
+
