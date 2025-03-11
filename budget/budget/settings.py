@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+from decouple import config
 import os
 from pathlib import Path
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^+7g08(%)i#si15n2^_raqni_tkk7$!tf35a#w1r)98qr0=)38'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost').split(',')
 
 
 # Application definition
@@ -103,12 +107,12 @@ WSGI_APPLICATION = 'budget.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'budget_db',
-        'USER': 'django_admin',
-        'PASSWORD': 'admin',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default=5432, cast=int),
     }
 }
 
@@ -123,25 +127,15 @@ AUTHENTICATION_BACKENDS = [
 
 
 # Настройки allauth
-# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Обязательная верификация email
-ACCOUNT_EMAIL_REQUIRED = True  # Email обязателен при регистрации
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'  # Вход по email или username
-ACCOUNT_LOGOUT_ON_GET = True  # Выход по GET-запросу
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_LOGOUT_ON_GET = True
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = '/'
 
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'APP': {
-            'client_id': 'ТВОЙ_CLIENT_ID',
-            'secret': 'ТВОЙ_CLIENT_SECRET',
-        }
-    }
-}
 
 # Provider specific settings allauth
 SOCIALACCOUNT_PROVIDERS = {
@@ -150,8 +144,8 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '1016502774969-203fnc8ebumvb5nbe5o1922ea74rnkq5.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_CLIENT_SECRET'),
             'key': ''
         }
     }
@@ -197,6 +191,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
