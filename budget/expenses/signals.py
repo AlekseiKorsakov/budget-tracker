@@ -5,14 +5,14 @@ from django.dispatch import receiver
 from .models import PredefinedCategory, Category
 
 
-# @receiver(post_migrate)
-# def create_default_categories(sender, **kwargs):
-#     default_categories = [
-#         "Продукты", "Транспорт", "Жилье", "Здоровье", "Развлечения",
-#         "Одежда", "Образование", "Путешествия", "Кафе и рестораны", "Прочее"
-#     ]
-#     for category in default_categories:
-#         PredefinedCategory.objects.get_or_create(name=category)
+@receiver(post_migrate)
+def create_default_categories(sender, **kwargs):
+    default_categories = [
+        "Продукты", "Транспорт", "Жилье", "Здоровье", "Развлечения",
+        "Одежда", "Образование", "Путешествия", "Кафе и рестораны", "Прочее"
+    ]
+    for category in default_categories:
+        PredefinedCategory.objects.get_or_create(name=category)
 
 @receiver(post_save, sender=User)
 def create_user_categories(sender, instance, created, **kwargs):
