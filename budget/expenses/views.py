@@ -1,5 +1,5 @@
 from .models import Category, Expense
-from expenses.forms import Income, CategoryForm, ExpenseForm, IncomeForm
+from .forms import Income, CategoryForm, ExpenseForm, IncomeForm
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.urls import reverse
