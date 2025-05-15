@@ -1,13 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.timezone import now
-
-
-
-
-
-
-
+from django.db.models import Sum
 
 
 class Income(models.Model):
@@ -24,6 +17,15 @@ class Income(models.Model):
         verbose_name = "Доход за месяц"
         verbose_name_plural = "Доходы за месяц"
 
+    @classmethod
+    def get_month_incomes(cls, user, year, month):
+        expenses = Income.objects.filter(user=user, date__year=year, date__month=month)
+        return expenses
+
+    @classmethod
+    def get_month_income_amount(cls, user, year, month):
+        return cls.get_month_incomes(user, year, month).aggregate(Sum('amount'))[
+                'amount__sum'] or 0
 
 
 class PredefinedCategory(models.Model):
@@ -51,8 +53,6 @@ class Category(models.Model):
         unique_together = ('user', 'name')
 
 
-
-
 class Expense(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
@@ -68,3 +68,21 @@ class Expense(models.Model):
     class Meta:
         verbose_name='Расходы'
         verbose_name_plural = 'Расходы'
+
+    @classmethod
+    def get_month_expenses(cls, user, year, month):
+        return cls.objects.filter(user=user, date__year=year, date__month=month)
+
+    @classmethod
+    def get_category_expenses(cls, user, category, year, month):
+        return cls.objects.filter(user=user, category=category, date__year=year, date__month=month)
+
+    @classmethod
+    def get_month_expenses_amount(cls, user, year, month):
+        return cls.get_month_expenses(user, year, month).aggregate(Sum('amount'))[
+                         'amount__sum'] or 0
+
+    @classmethod
+    def get_category_expenses_amount(cls, user, category, year, month):
+        return cls.get_category_expenses(user, category, year, month).aggregate(Sum('amount'))[
+            'amount__sum'] or 0

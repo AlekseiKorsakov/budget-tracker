@@ -3,7 +3,6 @@ from .forms import Income, CategoryForm, ExpenseForm, IncomeForm
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.urls import reverse
-from django.db.models import Sum
 from django.utils.timezone import now
 from django.db import IntegrityError
 from django.contrib import messages
@@ -11,23 +10,7 @@ from django.contrib.auth.decorators import login_required
 from collections import defaultdict
 
 
-
 data_month = now().strftime('%Y-%m')
-
-
-
-def month_expenses(request, year, month):
-    expenses = Expense.objects.filter(user=request.user, date__year=year, date__month=month)
-    return expenses
-
-def category_expenses(request, category, year, month):
-    expenses = Expense.objects.filter(user=request.user, category=category, date__year=year, date__month=month)
-    return expenses
-
-
-def month_incomes(request, year, month):
-    expenses = Income.objects.filter(user=request.user, date__year=year, date__month=month)
-    return expenses
 
 
 def index(request):
@@ -38,12 +21,12 @@ def index(request):
 def home(request):
     date = request.GET.get('date') or now().strftime('%Y-%m')
     year, month = date.split('-')
-    expenses = month_expenses(request, year, month).order_by('-date','-time')
-    incomes = month_incomes(request, year, month).order_by('-date', '-time')
-    total_expenses = expenses.aggregate(Sum('amount'))[
-                 'amount__sum'] or 0
-    total_income = incomes.aggregate(Sum('amount'))[
-                 'amount__sum'] or 0
+    expenses = Expense.get_month_expenses(request.user, year, month) \
+        .select_related('category') \
+        .order_by('-date','-time')
+    incomes = Income.get_month_incomes(request.user, year, month).order_by('-date', '-time')
+    total_expenses = Expense.get_month_expenses_amount(request.user, year, month)
+    total_income = Income.get_month_income_amount(request.user, year, month)
     balance = total_income - total_expenses
     data_list = defaultdict(list)
     for expense in expenses:
@@ -83,8 +66,8 @@ def category(request, category_id):
     date = request.GET.get('date') or now().strftime('%Y-%m')
     year, month = date.split('-')
     category = Category.objects.get(id=category_id)
-    expenses = category_expenses(request, category, year, month).order_by('date')
-    total_expenses = expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+    expenses = Expense.get_category_expenses(request.user, category, year, month).order_by('date')
+    total_expenses = Expense.get_category_expenses_amount(request.user, category, year, month)
     expenses_list = defaultdict(list)
     for expense in expenses:
         expenses_list[expense.date].append(expense)
@@ -242,6 +225,3 @@ def expense(request, expense_id):
                'category': category
                }
     return  render(request, 'expenses/expense.html', context)
-
-
-
