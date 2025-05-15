@@ -1,3 +1,4 @@
+from django.views.generic import TemplateView
 from .models import Category, Expense
 from .forms import Income, CategoryForm, ExpenseForm, IncomeForm
 from django.shortcuts import render, redirect
@@ -6,15 +7,15 @@ from django.urls import reverse
 from django.utils.timezone import now
 from django.db import IntegrityError
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import (login_required)
 from collections import defaultdict
 
 
 data_month = now().strftime('%Y-%m')
 
 
-def index(request):
-    return render(request, 'expenses/index.html')
+class IndexView(TemplateView):
+    template_name = 'expenses/index.html'
 
 
 @login_required
